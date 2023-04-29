@@ -9,8 +9,9 @@ let employees = [
 ];
 
 // Get all employees
-router.get('/', (req, res) => {
-  res.json(employees);
+router.get('/', (req, res, next) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.send(employees);
 });
 
 // Get an employee by ID
@@ -34,24 +35,10 @@ router.post('/', (req, res) => {
   res.json(employee);
 });
 
-// Update an employee by ID
-router.put('/:id', (req, res) => {
-  const employee = employees.find(e => e.id === parseInt(req.params.id));
-  if (!employee) return res.status(404).send('Employee not found');
-  employee.firstName = req.body.firstName;
-  employee.lastName = req.body.lastName;
-  employee.age = req.body.age;
-  employee.gender = req.body.gender;
-  employee.jobTitle = req.body.jobTitle;
-  res.json(employee);
-});
-
-// Delete an employee by ID
-router.delete('/:id', (req, res) => {
-  const employeeIndex = employees.findIndex(e => e.id === parseInt(req.params.id));
-  if (employeeIndex === -1) return res.status(404).send('Employee not found');
-  employees.splice(employeeIndex, 1);
-  res.send('Employee deleted');
+router.post('/employees', (req, res) => {
+  const newEmployee = req.body;
+  console.log(newEmployee); 
+  res.status(200).json({ message: 'Employee added successfully.' });
 });
 
 module.exports = router;
