@@ -10,7 +10,6 @@ let employees = [
 
 // Get all employees
 router.get('/', (req, res, next) => {
-  res.set('Access-Control-Allow-Origin', '*');
   res.send(employees);
 });
 
