@@ -21,7 +21,7 @@ router.get('/:id', (req, res) => {
 });
 
 // Add a new employee
-router.post('/', (req, res) => {
+router.post('/employee', (req, res) => {
   const employee = {
     id: employees.length + 1,
     firstName: req.body.firstName,
@@ -30,14 +30,37 @@ router.post('/', (req, res) => {
     gender: req.body.gender,
     jobTitle: req.body.jobTitle
   };
-  employees.push(employee);
-  res.json(employee);
+  employees.push(newEmployee);
+  res.json(newEmployee);
 });
 
-router.post('/employees', (req, res) => {
-  const newEmployee = req.body;
-  console.log(newEmployee); 
-  res.status(200).json({ message: 'Employee added successfully.' });
+// Update an employee by ID
+router.put('/employee/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const updatedEmployee = req.body;
+
+  employees = employees.map(employee => {
+    if (employee.id === id) {
+      return {
+        ...employee,
+        ...updatedEmployee,
+        id: employee.id  // ensure that the employee ID is not changed
+      };
+    }
+    return employee;
+  });
+
+  res.json(updatedEmployee);
+});
+
+// Delete an employee by ID
+router.delete('/employee/:id', (req, res) => {
+  const employeeIndex = employees.findIndex(e => e.id === parseInt(req.params.id));
+  if (employeeIndex === -1) return res.status(404).send('Employee not found');
+
+  employees.splice(employeeIndex, 1);
+  res.status(204).send();
+  res.json({ message: `Employee with ID ${id} has been deleted.` });
 });
 
 module.exports = router;
